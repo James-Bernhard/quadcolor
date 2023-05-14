@@ -38,7 +38,8 @@ class OutOfFontError(Exception):
 
 # draw a line of letters at a specified position on a given image
 def draw_text(letters: str, image: Image.Image, pos=(0, 0),
-              h_centered: bool = True, v_centered: bool = True) -> Image.Image:
+              h_centered: bool = True, v_centered: bool = True,
+              x_offset = 0, y_offset = 0) -> Image.Image:
     """
     Draw the specified letters string in colored letters.
 
@@ -55,14 +56,16 @@ def draw_text(letters: str, image: Image.Image, pos=(0, 0),
     :param pos: (x, y) tuple of int giving the image coordinates of the position for the letters.
     :param h_centered: Should the text be centered horizontally at the specified position?
     :param v_centered: Should the text be shifted vertically by half the x-height?
+    :param x_offset: Amount by which to shift the text of every flashcard horizontally (positive means to the right).
+    :param y_offset: Amount by which to shift the text of every flashcard vertically (positive means downward).
     :return: The original image but with the colored letters drawn in it.
     """
     x_pos, y_pos = pos
 
-    y_offset = 0
+    y_shift = 0
     if v_centered and "x" in config.font_dict.keys():
         # to vertically center, offset by half the x-height
-        y_offset = config.font_dict["x"].quadrants.size[1] // 2
+        y_shift = config.font_dict["x"].quadrants.size[1] // 2
 
     width = 0
 
@@ -78,7 +81,7 @@ def draw_text(letters: str, image: Image.Image, pos=(0, 0),
     for letter in letters:
         if letter in config.font_dict.keys():
             image.paste(config.font_dict[letter].quadrants,
-                        (current_x_pos, y_pos + config.font_dict[letter].top_coord + y_offset),
+                        (current_x_pos + x_offset, y_pos + config.font_dict[letter].top_coord + y_shift + y_offset),
                         config.font_dict[letter].mask)
             current_x_pos += config.font_dict[letter].width
     return image

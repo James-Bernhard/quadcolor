@@ -1,5 +1,5 @@
 import math
-from PIL import Image
+from PIL import Image, ImageDraw
 from . import drawing
 
 
@@ -42,7 +42,8 @@ def get_flashcard_size(text_list: list) -> (int, int):
 def make_flashcards(text_list: list,
                     n_rows: int = 0, n_columns: int = 0,
                     width: int = 2550, height: int = 3450,
-                    margins=(0, 0, 0, 0), bg_color=(255, 255, 255)) -> list:
+                    margins=(0, 0, 0, 0), bg_color=(255, 255, 255),
+                    boundary_color=(180, 180, 180), x_offset=0, y_offset=0) -> list:
     """
     Generate a list of equal-sized four color text images with specified page dimensions and layout.
 
@@ -63,6 +64,9 @@ def make_flashcards(text_list: list,
     :param height: Page height in pixels.
     :param margins: Tuple of four ints giving the left, top, right, bottom margins around text, in pixels.
     :param bg_color: Tuple of three ints giving the RGB background color (each int between 0 and 255).
+    :param boundary_color: Tuple of three ints giving the RGB color of the lines between flashcards.
+    :param x_offset: Amount by which to shift the text of every flashcard horizontally (positive means to the right).
+    :param y_offset: Amount by which to shift the text of every flashcard vertically (positive means downward).
     :return:
     """
     if type(n_rows) != int or type(n_columns) != int:
@@ -103,5 +107,23 @@ def make_flashcards(text_list: list,
     for i, position in enumerate(positions[:n_lines]):
         page, x, y = position
         images[page] = drawing.draw_text(letters=text_list[i], image=images[page],
-                                         pos=(x, y), h_centered=h_centered)
+                                         pos=(x, y), h_centered=h_centered,
+                                         x_offset=x_offset, y_offset=y_offset)
+
+    if n_rows > 1:
+        for page, image in enumerate(images):
+            page_width, page_height = image.size
+            page_draw = ImageDraw.Draw(images[page])
+            for i in range(1, n_rows):
+                page_draw.line([(0, i*page_height//n_rows), (page_width, i*page_height//n_rows)],
+                               fill=boundary_color)
+
+    if n_columns > 1:
+        for page, image in enumerate(images):
+            page_width, page_height = image.size
+            page_draw = ImageDraw.Draw(images[page])
+            for j in range(1, n_columns):
+                page_draw.line([(j*page_width//n_columns, 0), (j*page_width//n_columns, page_height)],
+                               fill=boundary_color)
+
     return images

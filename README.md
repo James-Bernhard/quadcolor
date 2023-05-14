@@ -1,4 +1,4 @@
-# Quadcolor package for Python
+# quadcolor package for Python
 
 This package is designed to produce text whose letters have
 different-colored quadrants, as described
