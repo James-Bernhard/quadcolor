@@ -11,7 +11,7 @@ def display_images(images: list) -> None:
 
 def save_images(images: list, output_file, single_file=True, dpi=300) -> None:
     """
-    Save a list of images, according to the conventions of the image save method in the PIL package.
+    Save a list of images, according to the conventions of the image save method in the Pillow package.
 
     The actual saving is done via the Pillow package, so whatever output formats that package can handle (as
     specified by the file extension) can be used here. If single_file is True and the output format can be

@@ -20,7 +20,7 @@ def make_graphics(text_list: list, margins=(0, 0, 0, 0), bg_color=(255, 255, 255
                                       bottoms[i] - tops[i] + top_margin + bottom_margin), bg_color)
         images[i] = drawing.draw_text(letters=text_list[i], image=images[i],
                                       pos=(left_margin + (widths[i] // 2), top_margin - tops[i]),
-                                      h_centered=True)
+                                      h_centered=True, v_centered=False)
     return images
 
 

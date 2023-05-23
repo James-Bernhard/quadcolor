@@ -39,7 +39,7 @@ class OutOfFontError(Exception):
 # draw a line of letters at a specified position on a given image
 def draw_text(letters: str, image: Image.Image, pos=(0, 0),
               h_centered: bool = True, v_centered: bool = True,
-              x_offset = 0, y_offset = 0) -> Image.Image:
+              x_offset=0, y_offset=0) -> Image.Image:
     """
     Draw the specified letters string in colored letters.
 
